@@ -31,7 +31,7 @@ model = joblib.load("models/fraud_model.pkl")
 
 # Database connection
 conn = sqlite3.connect(
-    'database/fraud.db',
+    'fraud.db',
     check_same_thread=False
 )
 
