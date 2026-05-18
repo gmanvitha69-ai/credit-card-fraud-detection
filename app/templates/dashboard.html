@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fraud Dashboard</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+
+        body{
+            background:#141e30;
+            color:white;
+            font-family:Arial;
+            margin:0;
+            padding:0;
+        }
+
+        .dashboard-container{
+            text-align:center;
+            margin-top:40px;
+        }
+
+        .title{
+            font-size:40px;
+            margin-bottom:30px;
+        }
+
+        .card-container{
+            display:flex;
+            justify-content:center;
+            gap:30px;
+            margin-bottom:40px;
+            flex-wrap:wrap;
+        }
+
+        .card{
+            background:white;
+            color:black;
+            width:250px;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 0 15px rgba(0,0,0,0.4);
+        }
+
+        .card h2{
+            margin-bottom:15px;
+            color:#243b55;
+        }
+
+        .chart-container{
+            background:white;
+            width:600px;
+            margin:auto;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 0 20px rgba(0,0,0,0.4);
+        }
+
+        img{
+            width:100%;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <a href="/">Home</a>
+
+        <a href="/history">History</a>
+
+        <a href="/dashboard">Dashboard</a>
+        
+        <a href="/login">Login</a>
+
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="dashboard-container">
+
+        <div class="title">
+            Fraud Detection Analytics Dashboard
+        </div>
+
+        <div class="card-container">
+
+            <div class="card">
+                <h2>AI Model</h2>
+                <p>Random Forest Classifier</p>
+            </div>
+
+            <div class="card">
+                <h2>Database</h2>
+                <p>SQLite Prediction Storage</p>
+            </div>
+
+            <div class="card">
+                <h2>Backend</h2>
+                <p>Flask Web Application</p>
+            </div>
+
+        </div>
+
+        <div class="chart-container">
+
+            <h2>Fraud vs Genuine Transactions</h2>
+
+            <img src="/static/chart.png">
+
+        </div>
+
+<br><br>
+
+<a href="/download_report">
+
+    <button
+        style="
+            padding:15px 25px;
+            font-size:18px;
+            background:#243b55;
+            color:white;
+            border:none;
+            border-radius:10px;
+            cursor:pointer;
+        "
+    >
+        Download Fraud Report
+    </button>
+
+</a>
+
+    </div>
+
+</body>
+
+</html>
