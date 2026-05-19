@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSV Prediction Results</title>
+    <style>
+        body { background: #141e30; font-family: Arial, sans-serif; margin: 0; color: white; }
+        .navbar { background: #1a2a45; padding: 15px 30px; display: flex; gap: 30px; justify-content: flex-end; }
+        .navbar a { color: white; text-decoration: none; font-weight: bold; }
+        .navbar a:hover { color: #4fc3f7; }
+
+        .wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
+        h1 { text-align: center; margin-bottom: 10px; }
+
+        /* Stats cards */
+        .stats { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
+        .stat-card { background: #1e2d45; border-radius: 12px; padding: 20px 30px; text-align: center; min-width: 130px; }
+        .stat-num { font-size: 32px; font-weight: bold; }
+        .stat-lbl { font-size: 13px; color: #aaa; margin-top: 4px; }
+        .fraud-num { color: #e74c3c; }
+        .genuine-num { color: #2ecc71; }
+        .total-num { color: #4fc3f7; }
+
+        /* Table */
+        .table-wrap { background: white; border-radius: 12px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; color: black; }
+        thead { background: #243b55; color: white; }
+        th { padding: 14px 16px; text-align: left; font-size: 14px; }
+        td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #eee; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #f5f8ff; }
+
+        .badge {
+            padding: 4px 12px; border-radius: 999px;
+            font-size: 12px; font-weight: bold;
+        }
+        .fraud-badge { background: #ffe0e0; color: #c0392b; }
+        .genuine-badge { background: #e0ffe4; color: #27ae60; }
+        .risk-high { color: #e74c3c; font-weight: bold; }
+        .risk-medium { color: #f39c12; font-weight: bold; }
+        .risk-low { color: #27ae60; font-weight: bold; }
+
+        .back-btn {
+            display: block; width: fit-content; margin: 25px auto 0;
+            padding: 12px 30px; background: #243b55; color: white;
+            border-radius: 8px; text-decoration: none; font-size: 15px;
+        }
+        .back-btn:hover { background: #141e30; }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/history">History</a>
+    <a href="/dashboard">Dashboard</a>
+</div>
+
+<div class="wrapper">
+    <h1>CSV Batch Prediction Results</h1>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-num total-num">{{ total }}</div>
+            <div class="stat-lbl">Total Transactions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num fraud-num">{{ fraud_count }}</div>
+            <div class="stat-lbl">Fraud Detected</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num genuine-num">{{ genuine_count }}</div>
+            <div class="stat-lbl">Genuine</div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    {% for col in results[0].keys() %}
+                    <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    {% for key, val in row.items() %}
+                    <td>
+                        {% if key == 'Result' %}
+                            <span class="badge {% if 'Fraud' in val %}fraud-badge{% else %}genuine-badge{% endif %}">
+                                {{ val }}
+                            </span>
+                        {% elif key == 'Risk' %}
+                            <span class="risk-{{ val|lower }}">{{ val }}</span>
+                        {% else %}
+                            {{ val }}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/" class="back-btn">← Analyse Another Transaction</a>
+</div>
+
+</body>
+</html>

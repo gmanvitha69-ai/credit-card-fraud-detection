@@ -1,145 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Fraud Dashboard</title>
-
-    <link rel="stylesheet" href="/static/style.css">
-
     <style>
+        body { background: #141e30; font-family: Arial, sans-serif; margin: 0; color: white; }
+        .navbar { background: #1a2a45; padding: 15px 30px; display: flex; gap: 30px; justify-content: flex-end; }
+        .navbar a { color: white; text-decoration: none; font-weight: bold; }
+        .navbar a:hover { color: #4fc3f7; }
 
-        body{
-            background:#141e30;
-            color:white;
-            font-family:Arial;
-            margin:0;
-            padding:0;
+        .wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        h1 { text-align: center; margin-bottom: 30px; }
+
+        /* Tech cards */
+        .tech-cards { display: flex; gap: 20px; margin-bottom: 30px; }
+        .tech-card {
+            flex: 1; background: white; color: #243b55;
+            border-radius: 12px; padding: 25px; text-align: center;
         }
+        .tech-card h2 { font-size: 20px; margin-bottom: 8px; }
+        .tech-card p { font-size: 14px; color: #666; margin: 0; }
 
-        .dashboard-container{
-            text-align:center;
-            margin-top:40px;
+        /* Stats */
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; }
+        .stat { flex: 1; background: #1e2d45; border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-num { font-size: 36px; font-weight: bold; }
+        .stat-lbl { font-size: 13px; color: #aaa; margin-top: 5px; }
+        .total-c { color: #4fc3f7; }
+        .fraud-c { color: #e74c3c; }
+        .genuine-c { color: #2ecc71; }
+
+        /* Chart */
+        .chart-card {
+            background: white; border-radius: 12px;
+            padding: 30px; text-align: center;
         }
+        .chart-card h2 { color: #243b55; margin-bottom: 20px; }
+        .chart-card img { max-width: 400px; width: 100%; }
 
-        .title{
-            font-size:40px;
-            margin-bottom:30px;
-        }
-
-        .card-container{
-            display:flex;
-            justify-content:center;
-            gap:30px;
-            margin-bottom:40px;
-            flex-wrap:wrap;
-        }
-
-        .card{
-            background:white;
-            color:black;
-            width:250px;
-            padding:30px;
-            border-radius:15px;
-            box-shadow:0 0 15px rgba(0,0,0,0.4);
-        }
-
-        .card h2{
-            margin-bottom:15px;
-            color:#243b55;
-        }
-
-        .chart-container{
-            background:white;
-            width:600px;
-            margin:auto;
-            padding:30px;
-            border-radius:20px;
-            box-shadow:0 0 20px rgba(0,0,0,0.4);
-        }
-
-        img{
-            width:100%;
-        }
-
+        .no-data { color: #aaa; font-size: 15px; padding: 30px; }
     </style>
-
 </head>
-
 <body>
 
-    <div class="navbar">
+<div class="navbar">
+    <a href="/">Home</a>
+    <a href="/history">History</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/logout">Logout</a>
+</div>
 
-        <a href="/">Home</a>
+<div class="wrapper">
+    <h1>Fraud Detection Analytics Dashboard</h1>
 
-        <a href="/history">History</a>
-
-        <a href="/dashboard">Dashboard</a>
-        
-        <a href="/login">Login</a>
-
-        <a href="/logout">Logout</a>
+    <!-- Tech stack cards -->
+    <div class="tech-cards">
+        <div class="tech-card">
+            <h2>AI Model</h2>
+            <p>Random Forest Classifier</p>
+        </div>
+        <div class="tech-card">
+            <h2>Database</h2>
+            <p>SQLite Prediction Storage</p>
+        </div>
+        <div class="tech-card">
+            <h2>Backend</h2>
+            <p>Flask Web Application</p>
+        </div>
     </div>
 
-    <div class="dashboard-container">
-
-        <div class="title">
-            Fraud Detection Analytics Dashboard
+    <!-- Summary stats -->
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-num total-c">{{ total }}</div>
+            <div class="stat-lbl">Total Predictions</div>
         </div>
-
-        <div class="card-container">
-
-            <div class="card">
-                <h2>AI Model</h2>
-                <p>Random Forest Classifier</p>
-            </div>
-
-            <div class="card">
-                <h2>Database</h2>
-                <p>SQLite Prediction Storage</p>
-            </div>
-
-            <div class="card">
-                <h2>Backend</h2>
-                <p>Flask Web Application</p>
-            </div>
-
+        <div class="stat">
+            <div class="stat-num fraud-c">{{ fraud_total }}</div>
+            <div class="stat-lbl">Fraud Detected</div>
         </div>
-
-        <div class="chart-container">
-
-            <h2>Fraud vs Genuine Transactions</h2>
-
-            <img src="/static/chart.png">
-
+        <div class="stat">
+            <div class="stat-num genuine-c">{{ genuine_total }}</div>
+            <div class="stat-lbl">Genuine</div>
         </div>
-
-<br><br>
-
-<a href="/download_report">
-
-    <button
-        style="
-            padding:15px 25px;
-            font-size:18px;
-            background:#243b55;
-            color:white;
-            border:none;
-            border-radius:10px;
-            cursor:pointer;
-        "
-    >
-        Download Fraud Report
-    </button>
-
-</a>
-
     </div>
+
+    <!-- Pie chart -->
+    <div class="chart-card">
+        <h2>Fraud vs Genuine Transactions</h2>
+        {% if total > 0 %}
+            <img src="/static/chart.png?t={{ range(1,99999) | random }}" alt="Fraud vs Genuine Pie Chart">
+        {% else %}
+            <div class="no-data">No predictions yet. <a href="/" style="color:#243b55;">Analyse a transaction</a> to see the chart.</div>
+        {% endif %}
+    </div>
+</div>
 
 </body>
-
 </html>
